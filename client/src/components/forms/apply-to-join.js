@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { Grid, Button} from "@material-ui/core";
+import { Grid, Button, CircularProgress} from "@material-ui/core";
 import { TextField } from 'formik-material-ui';
 import Dropzone from 'react-dropzone'
 import { Formik, Field, Form } from 'formik';
+import { SnackbarContentWrapper } from "../snackbar";
 import * as Yup from 'yup';
 import "./forms.css";
 
@@ -16,15 +17,58 @@ const FormSchema = Yup.object().shape({
 });
 
 class ApplyToJoinForm extends Component{
+    constructor(props){
+        super(props);
+        this.formActions = null;
+    }
 
     handleSubmit(values, actions) {
         console.log("ApplyToJoinForm > handleSubmit", values, actions);
+        this.formActions = actions;
         this.props.onSubmit(values);
     }
 
-    render(){
+    resetFormStatus(){
+        if(this.formActions){
+            this.formActions.resetForm();
+        }
 
+        if(this.props.onReset) {
+            this.props.onReset();
+        }
+    }
+
+    renderStatus(data){
+        switch(data.status){
+            case 4:
+                return <div></div>;
+                
+            case 1:
+                return <div style={{textAlign: "center"}}><CircularProgress color="secondary" /></div>;
+            case 2: 
+                return <SnackbarContentWrapper
+                variant="success"
+                className="margin-auto"
+                message="Submit form is success!"
+                onClose={this.resetFormStatus.bind(this)}
+              />;
+            case 3: 
+                return <SnackbarContentWrapper
+                variant="error"
+                className="margin-auto"
+                message="Somethin went wrong!"
+                onClose={this.resetFormStatus.bind(this)}
+              />;
+            default:
+                return <div></div>;
+        }
+    }
+
+    render(){
+        const { status } = this.props;
+        
         return <div >
+            {this.renderStatus(status)}
             <Formik 
                 initialValues={{
                     name: "",
@@ -95,12 +139,15 @@ class ApplyToJoinForm extends Component{
                                             form.setFieldValue('attachments',[...field.value,...acceptedFiles]);
                                         }}>
                                             {({getRootProps, getInputProps}) => (
-                                                <section className="dropzone-section">
-                                                <div {...getRootProps()}>
-                                                    <input {...getInputProps()} />
-                                                    <p>Drag 'n' drop some files here, or click to select files</p>
+                                                <div className="dropzone-container">
+                                                    {field.value.map((item)=><span className="file-items" key={item.name}>{item.name} </span>)}
+                                                    <section className="dropzone-section">
+                                                    <div {...getRootProps()}>
+                                                        <input {...getInputProps()} />
+                                                        <p>Drag 'n' drop some files here, or click to select files</p>
+                                                    </div>
+                                                    </section>
                                                 </div>
-                                                </section>
                                             )}
                                         </Dropzone>)}
                                 </Field>

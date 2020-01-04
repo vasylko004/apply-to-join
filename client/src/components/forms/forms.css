@@ -1,9 +1,27 @@
 .dropzone-section{
     border: dashed 2px #bbbbbb;
     text-align: center;
+}
+.dropzone-container{
     margin-top: 25px;
+}
+.file-items{
+    display: inline-block;
+    margin-right: 5px;
+    border-bottom: dotted 1px #dddddd;
+    margin-bottom: 5px;
+}
+.file-items::after{
+    content: ",";
+}
+.file-items:last-child::after{
+    content: "";
 }
 .dropzone-section>div{
     cursor: pointer;
     padding: 25px;
+}
+
+.margin-auto{
+    margin: auto;
 }

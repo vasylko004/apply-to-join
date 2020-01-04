@@ -69,12 +69,10 @@ function createForm (data, files){
                                 }).then(file=>cb()).catch(err=>cb(err))
                             })
                         }).catch((err)=>{
-                            console.log("make dir", err)
                             cb(err);
                         })
                 }, function(err){
                     if(err) {
-                        console.log(err);
                         reject(err);
                     } else {
                         resolve()
@@ -110,17 +108,15 @@ const resolvers = {
                         if(err){
                             reject(err);
                         } else {
-                            console.log(files)
                             createForm(args.data, files).then(()=>{
                                 resolve({message: "success"})
                             }).catch(err=>reject(err));
                         }
                     })
                 }else  {
-                    createForm(args.data).then(form=>{
-                        console.log(form);
+                    createForm(args.data).then(form=>{                        
+                        resolve( {message: "success"});
                     })
-                    resolve( {message: "success"});
                 }
             })
         }
