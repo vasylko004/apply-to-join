@@ -1,0 +1,9 @@
+.dropzone-section{
+    border: dashed 2px #bbbbbb;
+    text-align: center;
+    margin-top: 25px;
+}
+.dropzone-section>div{
+    cursor: pointer;
+    padding: 25px;
+}
